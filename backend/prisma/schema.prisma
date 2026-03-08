@@ -1,0 +1,57 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  resumes   Resume[]
+  createdAt DateTime @default(now())
+}
+
+model Resume {
+  id             String            @id @default(uuid())
+  userId         String
+  user           User              @relation(fields: [userId], references: [id])
+  fileUrl        String
+  parsedText     String            @db.Text
+  analysis       AnalysisResult?
+  recommendation Recommendation?
+  createdAt      DateTime          @default(now())
+}
+
+model AnalysisResult {
+  id             String   @id @default(uuid())
+  resumeId       String   @unique
+  resume         Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  atsScore       Float
+  jobMatchScore  Float?
+  skills         Json     // Array of extracted skills
+  sections       Json     // Detected sections
+  analysisJson   Json     // Full AI analysis response
+  createdAt      DateTime @default(now())
+}
+
+model JobDescription {
+  id          String   @id @default(uuid())
+  title       String
+  content     String   @db.Text
+  keywords    Json
+  createdAt   DateTime @default(now())
+}
+
+model Recommendation {
+  id              String   @id @default(uuid())
+  resumeId        String   @unique
+  resume          Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  weaknesses      Json
+  improvements    Json
+  rewrittenPoints Json
+  createdAt       DateTime @default(now())
+}
