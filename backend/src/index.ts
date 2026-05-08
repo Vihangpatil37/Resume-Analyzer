@@ -27,4 +27,9 @@ app.use('/api/resume', resumeRoutes);
 app.use('/api/analysis', analysisRoutes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+}
+
+export default app;
