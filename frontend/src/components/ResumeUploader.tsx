@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState, FC } from 'react';
 import { useDropzone, DropzoneOptions } from 'react-dropzone';
 import { UploadCloud } from 'lucide-react';
 
@@ -7,14 +7,14 @@ interface Props {
   setIsUploading: (val: boolean) => void;
 }
 
-const ResumeUploader: React.FC<Props> = ({ onUploadSuccess, setIsUploading }) => {
+const ResumeUploader: FC<Props> = ({ onUploadSuccess, setIsUploading }) => {
   const [error, setError] = useState<string | null>(null);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     setError(null);
     if (acceptedFiles.length === 0) return;
 
-    const file = acceptedFiles[0];
+    // const file = acceptedFiles[0];
     setIsUploading(true);
     
     // Simulate an upload delay or call the real API
